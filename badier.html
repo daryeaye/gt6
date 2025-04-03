@@ -5,6 +5,7 @@
   <title>Geotopia Pt6 The Mayor</title>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
   <style>
+    /* Main Code Styles */
     /* Basic layout */
     body, html {
       margin: 0;
@@ -103,6 +104,58 @@
       height: 100%;
     }
   </style>
+  <!-- Side Widget Styles -->
+  <style>
+    /* Side widget styling */
+    #side-widget {
+      position: fixed;
+      top: 20px;
+      right: 20px; /* Change to left:20px; if you prefer */
+      width: 200px;
+      height: 200px;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      padding: 10px;
+      box-sizing: border-box;
+      font-family: 'Caveat', cursive;
+      z-index: 999;
+    }
+    #side-widget p.title {
+      font-size: 24px;
+      text-align: center;
+      margin: 0 0 10px;
+    }
+    #side-widget button,
+    #side-widget a {
+      display: block;
+      margin: 0 auto;
+      font-size: 20px;
+      cursor: pointer;
+      text-align: center;
+      background: lightblue;
+      border: none;
+      padding: 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+    /* Selection overlay styles */
+    #selection-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      z-index: 1000;
+    }
+    #selection-box {
+      position: absolute;
+      border: 2px dashed #000;
+      background: rgba(0,0,0,0.1);
+    }
+  </style>
+  <!-- html2canvas library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <div id="app-container">
@@ -112,12 +165,6 @@
         <div>
           <input type="text" id="username" placeholder="Enter your name" style="font-size:16px; padding:5px;">
           <button id="confirmBtn" onclick="confirmName()">Confirm</button>
-        </div>
-        <div id="translation-widget">
-          <span style="font-size:18px;">Need translation?</span>
-          <span style="font-size:22px; margin-left:10px;">
-            <a href="https://drive.google.com/file/d/1xoM4KPyNPV4l4MxoeFW5KTrbwWVlQBpe/view?usp=drive_link" target="_blank">Open me!</a>
-          </span>
         </div>
       </div>
       <div id="progressBar">
@@ -148,11 +195,7 @@
       <!-- Page 3 (Hub) -->
       <div id="page3" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-03.jpg" alt="Page 3 Background">
-        <!-- Hub boxes with updated color grouping and IDs:
-             Blue group (CEAD): Boxes C, E, A, D.
-             Red group (HGFB): Boxes H, G, F, B.
-             Their onclick calls will show subordinate pages with IDs "pageX_sub".
-        -->
+        <!-- Hub boxes with updated color grouping and IDs: -->
         <div id="boxC" class="box" style="left:733px; top:151px; width:57px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(4)">C</div>
         <div id="boxE" class="box" style="left:338px; top:169px; width:60px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(5)">E</div>
         <div id="boxA" class="box" style="left:479px; top:90px; width:56px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(8)">A</div>
@@ -219,13 +262,10 @@
       <div id="page22" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-22.jpg" alt="Page 22 Background">
         <input type="text" id="answer5348_page22" class="answer" style="left:353px; top:464px; width:254px; height:52px; background: #ffffffff;">
-      <button id="unlock_btn" style="position:absolute; left:421px; top:413px; width:118px; height:52px; border: 1px solid black;" onclick="checkPasswordPage22()">Unlock</button>
+        <button id="unlock_btn" style="position:absolute; left:421px; top:413px; width:118px; height:52px; border: 1px solid black;" onclick="checkPasswordPage22()">Unlock</button>
       </div>
       <div id="page23" class="page" style="position: relative;">
-        <!-- Background image -->
         <img src="https://daryeaye.github.io/gt6/6-23.jpg" alt="Page 23 Image" style="width: 100%; display: block;">
-
-        <!-- Transparent red box linking to Google -->
         <a href="https://daryeaye.github.io/gt6/chaermosi.html" target="_blank" style="
           position: absolute;
           left: 310px;
@@ -239,8 +279,8 @@
         "></a>
       </div>
       
-      <!-- SUBORDINATE PAGES (IDs ending with _sub) -->
-      <!-- Page 4_sub (from Box C, blue group) -->
+      <!-- SUBORDINATE PAGES -->
+      <!-- Page 4_sub -->
       <div id="page4_sub" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-04.jpg" alt="Page 4 Background">
         <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
@@ -260,7 +300,7 @@
         <input type="text" id="box13_page4" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
       </div>
       
-      <!-- Page 5_sub (from Box E, blue group) -->
+      <!-- Page 5_sub -->
       <div id="page5_sub" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-05.jpg" alt="Page 5 Background">
         <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
@@ -280,7 +320,7 @@
         <input type="text" id="box13_page5" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
       </div>
       
-      <!-- Page 6_sub (from Box H, red group) -->
+      <!-- Page 6_sub -->
       <div id="page6_sub" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-06.jpg" alt="Page 6 Background">
         <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
@@ -290,7 +330,7 @@
         <input type="text" id="answer336" class="answer" style="left:310px; top:424px; width:615px; height:86px; background: lightblue;">
       </div>
       
-      <!-- Page 7_sub (from Box G, red group) -->
+      <!-- Page 7_sub -->
       <div id="page7_sub" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-07.jpg" alt="Page 7 Background">
         <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
@@ -300,7 +340,7 @@
         <input type="text" id="answer284" class="answer" style="left:310px; top:424px; width:615px; height:86px; background: lightblue;">
       </div>
       
-      <!-- Page 8_sub (from Box A, blue group) -->
+      <!-- Page 8_sub -->
       <div id="page8_sub" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-08.jpg" alt="Page 8 Background">
         <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:516px; top:7px; width:259px; height:171px; border:1px solid black;">
@@ -320,29 +360,26 @@
         <input type="text" id="box13_page8" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
       </div>
       
-<div id="page9_sub" class="page">
-  <img class="bg" src="https://daryeaye.github.io/gt6/6-09.jpg" alt="Page 9 Background">
-  <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:516px; top:7px; width:259px; height:171px; border:1px solid black;">
-  <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-  <input type="text" id="box1_page9" class="answer" style="left:400px; top:284px; width:177px; height:47px; background: lightblue;">
-  <input type="text" id="box2_page9" class="answer" style="left:610px; top:284px; width:87px; height:47px; background: lightblue;">
-  <!-- This is the missing expected answer box for "50": -->
-  <input type="text" id="answer50_page9" class="answer" style="left:730px; top:284px; width:110px; height:47px; background: lightblue;">
-  <!-- Other inputs for page 9_sub follow... -->
-  <input type="text" id="box4_page9" class="answer" style="left:141px; top:315px; width:63px; height:42px; background: lightblue;">
-  <input type="text" id="box5_page9" class="answer" style="left:118px; top:359px; width:63px; height:41px; background: lightblue;">
-  <input type="text" id="box6_page9" class="answer" style="left:135px; top:402px; width:63px; height:42px; background: lightblue;">
-  <input type="text" id="box7_page9" class="answer" style="left:305px; top:426px; width:68px; height:47px; background: lightblue;">
-  <input type="text" id="box8_page9" class="answer" style="left:392px; top:426px; width:68px; height:47px; background: lightblue;">
-  <input type="text" id="box9_page9" class="answer" style="left:484px; top:426px; width:68px; height:47px; background: lightblue;">
-  <input type="text" id="box10_page9" class="answer" style="left:568px; top:426px; width:68px; height:47px; background: lightblue;">
-  <input type="text" id="box11_page9" class="answer" style="left:659px; top:426px; width:68px; height:47px; background: lightblue;">
-  <input type="text" id="answer90_page9" class="answer" style="left:749px; top:426px; width:99px; height:47px; background: lightblue;">
-  <input type="text" id="box13_page9" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
-</div>
-
+      <div id="page9_sub" class="page">
+        <img class="bg" src="https://daryeaye.github.io/gt6/6-09.jpg" alt="Page 9 Background">
+        <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:516px; top:7px; width:259px; height:171px; border:1px solid black;">
+        <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+        <input type="text" id="box1_page9" class="answer" style="left:400px; top:284px; width:177px; height:47px; background: lightblue;">
+        <input type="text" id="box2_page9" class="answer" style="left:610px; top:284px; width:87px; height:47px; background: lightblue;">
+        <input type="text" id="answer50_page9" class="answer" style="left:730px; top:284px; width:110px; height:47px; background: lightblue;">
+        <input type="text" id="box4_page9" class="answer" style="left:141px; top:315px; width:63px; height:42px; background: lightblue;">
+        <input type="text" id="box5_page9" class="answer" style="left:118px; top:359px; width:63px; height:41px; background: lightblue;">
+        <input type="text" id="box6_page9" class="answer" style="left:135px; top:402px; width:63px; height:42px; background: lightblue;">
+        <input type="text" id="box7_page9" class="answer" style="left:305px; top:426px; width:68px; height:47px; background: lightblue;">
+        <input type="text" id="box8_page9" class="answer" style="left:392px; top:426px; width:68px; height:47px; background: lightblue;">
+        <input type="text" id="box9_page9" class="answer" style="left:484px; top:426px; width:68px; height:47px; background: lightblue;">
+        <input type="text" id="box10_page9" class="answer" style="left:568px; top:426px; width:68px; height:47px; background: lightblue;">
+        <input type="text" id="box11_page9" class="answer" style="left:659px; top:426px; width:68px; height:47px; background: lightblue;">
+        <input type="text" id="answer90_page9" class="answer" style="left:749px; top:426px; width:99px; height:47px; background: lightblue;">
+        <input type="text" id="box13_page9" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
+      </div>
       
-      <!-- Page 10_sub (from Box F, red group) -->
+      <!-- Page 10_sub -->
       <div id="page10_sub" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-10.jpg" alt="Page 10 Background">
         <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
@@ -352,7 +389,7 @@
         <input type="text" id="answer156_page10" class="answer" style="left:310px; top:424px; width:615px; height:86px; background: lightblue;">
       </div>
       
-      <!-- Page 11_sub (from Box B, red group) -->
+      <!-- Page 11_sub -->
       <div id="page11_sub" class="page">
         <img class="bg" src="https://daryeaye.github.io/gt6/6-11.jpg" alt="Page 11 Background">
         <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
@@ -362,7 +399,7 @@
         <input type="text" id="answer108_page11" class="answer" style="left:310px; top:424px; width:615px; height:86px; background: lightblue;">
       </div>
     </div>
-    <!-- Navigation Buttons (appear on main pages) -->
+    <!-- Navigation Buttons -->
     <div id="nav-buttons">
       <button id="prev-btn" onclick="prevPage()">Previous</button>
       <button id="next-btn" onclick="nextPage()">Next</button>
@@ -427,12 +464,11 @@
       document.getElementById('page' + pageNum + "_sub").classList.add('active');
       currentPage = pageNum;
       markVisited(pageNum);
-      // Replace nav-buttons with a Back button at bottom right
+      // Replace nav-buttons with a Back button
       document.getElementById("nav-buttons").innerHTML = "<button id='back-btn' onclick='backFromSubPage()'>Back</button>";
     }
     
     function backFromSubPage() {
-      // Depending on current subordinate page, call its check function.
       switch(currentPage) {
         case 4: checkAnswersAndGoBackPage4(); break;
         case 5: checkAnswersAndGoBackPage5(); break;
@@ -447,7 +483,6 @@
     
     function nextPage() {
       const idx = mainPages.indexOf(currentPage);
-      // On page 3, ensure all subordinate pages are completed before going to page 12
       if(currentPage === 3) {
         for(let key in subPageStatus) {
           if(!subPageStatus[key]) {
@@ -456,7 +491,6 @@
           }
         }
       }
-      // If current page requires validation, check it
       const validations = {
         13: () => document.getElementById('answer720_page13').value.toLowerCase().includes("720"),
         14: () => document.getElementById('answer468_page14').value.toLowerCase().includes("468"),
@@ -464,7 +498,7 @@
         16: () => document.getElementById('answer60_page16').value.toLowerCase().includes("60"),
         17: () => document.getElementById('answer400_page17').value.toLowerCase().includes("400"),
         18: () => document.getElementById('answer100_page18').value.toLowerCase().includes("100"),
-        22: () => true // For page 22, Next button bypasses password check
+        22: () => true
       };
       if(validations[currentPage] && !validations[currentPage]()) {
         alert("🤨 The Mayor needs you to be more professional. Check your answer!");
@@ -482,7 +516,6 @@
       }
     }
     
-    // Validation functions for subordinate pages (case insensitive)
     function checkAnswersAndGoBackPage4() {
       const ans80 = document.getElementById('answer80_page4').value.toLowerCase();
       const ans138 = document.getElementById('answer138_page4').value.toLowerCase();
@@ -578,12 +611,9 @@
     function checkPasswordPage22() {
       let ans = document.getElementById('answer5348_page22').value;
       if (ans === "5348") {
-        // Clear the input
         document.getElementById('answer5348_page22').value = "";
         localStorage.setItem('answer5348_page22', "");
-        // Open the additional link in a new tab
         window.open("https://daryeaye.github.io/geotopia/weikeduo.pdf", "_blank");
-        // Then proceed to page 23
         showPage(23);
       } else {
         alert("Did you finish the roof building?");
@@ -604,6 +634,95 @@
     document.addEventListener("DOMContentLoaded", function() {
       setupPersistence();
       showPage(currentPage);
+    });
+  </script>
+  
+  <!-- Side Widget HTML -->
+  <div id="side-widget">
+    <p class="title">Need translation?</p>
+    <button id="select-text">Select Text</button>
+    <p>
+      <a href="https://translate.google.com/?sl=en&tl=es&op=images" target="_blank">
+        Click me and paste from clipboard
+      </a>
+    </p>
+  </div>
+  <!-- Side Widget Script -->
+  <script>
+    document.getElementById('select-text').addEventListener('click', function() {
+      // Create overlay for user selection
+      const overlay = document.createElement('div');
+      overlay.id = 'selection-overlay';
+      document.body.appendChild(overlay);
+      
+      let startX, startY, selectionBox;
+      
+      overlay.addEventListener('mousedown', function(e) {
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        selectionBox = document.createElement('div');
+        selectionBox.id = 'selection-box';
+        selectionBox.style.left = startX + 'px';
+        selectionBox.style.top = startY + 'px';
+        selectionBox.style.width = '0px';
+        selectionBox.style.height = '0px';
+        overlay.appendChild(selectionBox);
+        
+        function mouseMoveHandler(e) {
+          const currentX = e.clientX;
+          const currentY = e.clientY;
+          const rectLeft = Math.min(startX, currentX);
+          const rectTop = Math.min(startY, currentY);
+          const rectWidth = Math.abs(currentX - startX);
+          const rectHeight = Math.abs(currentY - startY);
+          selectionBox.style.left = rectLeft + 'px';
+          selectionBox.style.top = rectTop + 'px';
+          selectionBox.style.width = rectWidth + 'px';
+          selectionBox.style.height = rectHeight + 'px';
+        }
+        
+        function mouseUpHandler(e) {
+          overlay.removeEventListener('mousemove', mouseMoveHandler);
+          overlay.removeEventListener('mouseup', mouseUpHandler);
+          
+          const boxRect = selectionBox.getBoundingClientRect();
+          document.body.removeChild(overlay);
+          
+          // Target the main app container to capture
+          const target = document.getElementById('app-container');
+          const targetRect = target.getBoundingClientRect();
+          
+          html2canvas(target, { useCORS: true, allowTaint: false }).then(canvas => {
+            const scaleFactor = canvas.width / targetRect.width;
+            const sx = (boxRect.left - targetRect.left) * scaleFactor;
+            const sy = (boxRect.top - targetRect.top) * scaleFactor;
+            const sWidth = boxRect.width * scaleFactor;
+            const sHeight = boxRect.height * scaleFactor;
+            
+            const croppedCanvas = document.createElement('canvas');
+            croppedCanvas.width = sWidth;
+            croppedCanvas.height = sHeight;
+            const ctx = croppedCanvas.getContext('2d');
+            ctx.drawImage(canvas, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
+            
+            croppedCanvas.toBlob(blob => {
+              if (blob) {
+                const item = new ClipboardItem({ 'image/png': blob });
+                navigator.clipboard.write([item]).then(() => {
+                  alert('Screenshot copied to clipboard.');
+                }).catch(err => {
+                  console.error('Failed to copy screenshot to clipboard', err);
+                  alert('Failed to copy screenshot to clipboard.');
+                });
+              }
+            });
+          });
+        }
+        
+        overlay.addEventListener('mousemove', mouseMoveHandler);
+        overlay.addEventListener('mouseup', mouseUpHandler);
+      });
     });
   </script>
 </body>
