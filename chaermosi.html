@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Geotopia Pt3 Master Li</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #app-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Container for pages */
+    #container {
+      position: relative;
+      width: 960px;
+      height: 540px;
+      border: 1px solid #ccc;
+      overflow: hidden;
+    }
+    .page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 960px;
+      height: 540px;
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    /* Background images for the two pages */
+    #page1 {
+      background: url("https://daryeaye.github.io/gt6/6-B.jpg") no-repeat center center;
+      background-size: cover;
+    }
+    #page2 {
+      background: url("https://daryeaye.github.io/gt6/6-A.jpg") no-repeat center center;
+      background-size: cover;
+    }
+    /* Styling for the link boxes */
+    .link-box {
+      position: absolute;
+      border: 2px solid red;
+      /* Prevent text selection */
+      user-select: none;
+      /* Remove default underline for links */
+      text-decoration: none;
+    }
+    #nav-buttons {
+      margin-top: 10px;
+    }
+    button {
+      font-family: "Caveat", cursive;
+      font-size: 20px;
+      background-color: lightblue;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="app-container">
+    <div id="container">
+      <div id="page1" class="page active">
+        <!-- Red boxes removed -->
+      </div>
+      <div id="page2" class="page">
+        <!-- Added link boxes -->
+        <a href="https://www.geogebra.org/3d/qgs5zfss" class="link-box" style="left:241px; top:290px; width:121px; height:52px;" target="_blank"></a>
+        <a href="https://www.geogebra.org/3d/xynhkubt" class="link-box" style="left:420px; top:290px; width:120px; height:52px;" target="_blank"></a>
+        <a href="https://www.geogebra.org/3d/bfuufrdb" class="link-box" style="left:598px; top:290px; width:121px; height:52px;" target="_blank"></a>
+        <a href="https://www.geogebra.org/3d/mru4rngh" class="link-box" style="left:227px; top:91px; width:201px; height:62px;" target="_blank"></a>
+      </div>
+    </div>
+    <div id="nav-buttons">
+      <button id="prev-btn" onclick="prevPage()">Previous</button>
+      <button id="next-btn" onclick="nextPage()">Next</button>
+    </div>
+  </div>
+  <script>
+    let currentPage = 1;
+    const totalPages = 2;
+    
+    function showPage(pageNum) {
+      for (let i = 1; i <= totalPages; i++) {
+        document.getElementById('page' + i).classList.remove('active');
+      }
+      document.getElementById('page' + pageNum).classList.add('active');
+      document.getElementById("prev-btn").style.display = pageNum === 1 ? "none" : "inline-block";
+      document.getElementById("next-btn").style.display = pageNum === totalPages ? "none" : "inline-block";
+    }
+
+    function nextPage() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      showPage(currentPage);
+    });
+  </script>
+</body>
+</html>
