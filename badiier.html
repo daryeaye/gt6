@@ -1,53 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Lost Treasure Pt6 The Mayor</title>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet" />
+
+  <!-- html2canvas (translation widget screenshot) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- PDF.js (renders PDFs in-page, works in Google Sites) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <style>
     /* Main Code Styles */
-    /* Basic layout */
     body, html {
       margin: 0;
       padding: 0;
-      height: 100vh;
+      min-height: 100vh;              /* allow scroll */
       display: flex;
       justify-content: center;
-      align-items: center;
-     background: url('https://daryeaye.github.io/geotopia/thatsit.png') no-repeat center center fixed;
+      align-items: flex-start;        /* allow scroll, prevent cut-off */
+      background: url('https://daryeaye.github.io/geotopia/thatsit.png') no-repeat center center fixed;
       background-size: cover;
     }
+
     #app-container {
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100%;
+      padding-bottom: 40px;
     }
-    /* Header */
+
+    /* Header (sticky) */
     #header {
       width: 960px;
       background: #eee;
       padding: 10px;
       margin-bottom: 10px;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
+
     #header-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 10px;
     }
-    #translation-widget span {
-      vertical-align: middle;
+
+    /* NEW: Stage wrapper so nav-buttons can be positioned OUTSIDE the canvas but anchored to it */
+    #stage{
+      position: relative;
+      width: 960px;
     }
-    #translation-widget a {
-      text-decoration: none;
-    }
+
     /* Container & pages */
     #container {
       position: relative;
       width: 960px;
       height: 540px;
       border: 1px solid #ccc;
+      background: white;
+      overflow: hidden;
     }
+
     .page {
       position: absolute;
       top: 0;
@@ -56,19 +75,8 @@
       height: 540px;
       display: none;
     }
-    .page.active {
-      display: block;
-    }
-    /* Background image via an <img> element */
-    .page .bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      z-index: -1;
-    }
+    .page.active { display: block; }
+
     /* Boxes and inputs */
     .box, input.answer {
       position: absolute;
@@ -77,42 +85,120 @@
       font-size: 18px;
       line-height: normal;
       border: 1px solid black;
+      box-sizing: border-box;
     }
+
     input.answer {
-      /* No placeholder text */
+      background: rgba(173,216,230,0.8);
     }
-    /* Navigation buttons area */
-    #nav-buttons {
-      margin-top: 10px;
+
+    /* Navigation buttons area (OUTSIDE the canvas, left side, like Pt5) */
+    #nav-buttons{
+      position:absolute;
+      left: -120px;         /* outside the canvas */
+      top: 50%;
+      transform: translateY(-50%);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      z-index: 50;
     }
+
     button {
       font-family: "Caveat", cursive;
       font-size: 20px;
       background-color: lightblue;
       border: none;
       padding: 10px 20px;
-      margin: 0 5px;
       cursor: pointer;
+      border-radius: 6px;
     }
+
     /* Progress bar */
-    #progressBar {
-      width: 100%;
-      background: #ccc;
-      height: 20px;
+    #progressBar { width: 100%; background: #ccc; height: 20px; }
+    #progress { width: 0%; background: green; height: 100%; }
+
+    /* Background images */
+    #page1 { background: url("https://daryeaye.github.io/gt6/6-01.jpg") no-repeat center; background-size: contain; }
+    #page2 { background: url("https://daryeaye.github.io/gt6/6-02.jpg") no-repeat center; background-size: contain; }
+    #page3 { background: url("https://daryeaye.github.io/gt6/6-03.jpg") no-repeat center; background-size: contain; }
+    #page4_sub { background: url("https://daryeaye.github.io/gt6/6-04.jpg") no-repeat center; background-size: contain; }
+    #page5_sub { background: url("https://daryeaye.github.io/gt6/6-05.jpg") no-repeat center; background-size: contain; }
+    #page6_sub { background: url("https://daryeaye.github.io/gt6/6-06.jpg") no-repeat center; background-size: contain; }
+    #page7_sub { background: url("https://daryeaye.github.io/gt6/6-07.jpg") no-repeat center; background-size: contain; }
+    #page8_sub { background: url("https://daryeaye.github.io/gt6/6-08.jpg") no-repeat center; background-size: contain; }
+    #page9_sub { background: url("https://daryeaye.github.io/gt6/6-09.jpg") no-repeat center; background-size: contain; }
+    #page10_sub { background: url("https://daryeaye.github.io/gt6/6-10.jpg") no-repeat center; background-size: contain; }
+    #page11_sub { background: url("https://daryeaye.github.io/gt6/6-11.jpg") no-repeat center; background-size: contain; }
+    #page12 { background: url("https://daryeaye.github.io/gt6/6-12.jpg") no-repeat center; background-size: contain; }
+    #page13 { background: url("https://daryeaye.github.io/gt6/6-13.jpg") no-repeat center; background-size: contain; }
+    #page14 { background: url("https://daryeaye.github.io/gt6/6-14.jpg") no-repeat center; background-size: contain; }
+    #page15 { background: url("https://daryeaye.github.io/gt6/6-15.jpg") no-repeat center; background-size: contain; }
+    #page16 { background: url("https://daryeaye.github.io/gt6/6-16.jpg") no-repeat center; background-size: contain; }
+    #page17 { background: url("https://daryeaye.github.io/gt6/6-17.jpg") no-repeat center; background-size: contain; }
+    #page18 { background: url("https://daryeaye.github.io/gt6/6-18.jpg") no-repeat center; background-size: contain; }
+    #page19 { background: url("https://daryeaye.github.io/gt6/6-19.jpg") no-repeat center; background-size: contain; }
+    #page20 { background: url("https://daryeaye.github.io/gt6/6-20.jpg") no-repeat center; background-size: contain; }
+    #page21 { background: url("https://daryeaye.github.io/gt6/6-21.jpg") no-repeat center; background-size: contain; }
+    #page22 { background: url("https://daryeaye.github.io/gt6/6-22.jpg") no-repeat center; background-size: contain; }
+    #page23 { background: url("https://daryeaye.github.io/gt6/6-23.jpg") no-repeat center; background-size: contain; }
+
+    /* SECOND CANVAS (Role + PDF viewer) */
+    #role-container {
+      width: 960px;
+      height: 540px;
+      border: 1px solid #ccc;
+      margin-top: 16px;
+      position: relative;
+      overflow: hidden;
+      background: #fff;
     }
-    #progress {
-      width: 0%;
-      background: green;
-      height: 100%;
+
+    #role-stage {
+      width: 960px;
+      height: 540px;
+      position: absolute;
+      inset: 0;
+      background: url('https://daryeaye.github.io/geotopia/role.jpg') no-repeat center/contain;
+      background-color: #ffffff;
+    }
+
+    .role-hotspot {
+      position: absolute;
+      border: none;
+      background: rgba(255,0,0,0);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    #pdf-view {
+      position: absolute;
+      inset: 0;
+      display: none;
+      background: #fff;
+    }
+
+    #pdf-scroll {
+      position: absolute;
+      inset: 0;
+      overflow: auto;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    #pdf-scroll canvas {
+      display: block;
+      margin: 0 auto 12px auto;
+      border: 1px solid #ddd;
     }
   </style>
+
   <!-- Side Widget Styles -->
   <style>
-    /* Side widget styling */
     #side-widget {
       position: fixed;
       top: 20px;
-      right: 20px; /* Change to left:20px; if you prefer */
+      right: 20px;
       width: 200px;
       height: 200px;
       background: #f9f9f9;
@@ -140,7 +226,6 @@
       text-decoration: none;
       color: inherit;
     }
-    /* Selection overlay styles */
     #selection-overlay {
       position: fixed;
       top: 0;
@@ -155,33 +240,9 @@
       border: 2px dashed red;
       background: rgba(0,0,0,0.1);
     }
-    #page1 { background: url("https://daryeaye.github.io/gt6/6-01.jpg") no-repeat center; background-size: contain; }
-    #page2 { background: url("https://daryeaye.github.io/gt6/6-02.jpg") no-repeat center; background-size: contain; }
-    #page3 { background: url("https://daryeaye.github.io/gt6/6-03.jpg") no-repeat center; background-size: contain; }
-    #page4_sub { background: url("https://daryeaye.github.io/gt6/6-04.jpg") no-repeat center; background-size: contain; }
-    #page5_sub { background: url("https://daryeaye.github.io/gt6/6-05.jpg") no-repeat center; background-size: contain; }
-    #page6_sub { background: url("https://daryeaye.github.io/gt6/6-06.jpg") no-repeat center; background-size: contain; }
-    #page7_sub { background: url("https://daryeaye.github.io/gt6/6-07.jpg") no-repeat center; background-size: contain; }
-    #page8_sub { background: url("https://daryeaye.github.io/gt6/6-08.jpg") no-repeat center; background-size: contain; }
-    #page9_sub { background: url("https://daryeaye.github.io/gt6/6-09.jpg") no-repeat center; background-size: contain; }
-    #page10_sub { background: url("https://daryeaye.github.io/gt6/6-10.jpg") no-repeat center; background-size: contain; }
-    #page11_sub { background: url("https://daryeaye.github.io/gt6/6-11.jpg") no-repeat center; background-size: contain; }
-    #page12 { background: url("https://daryeaye.github.io/gt6/6-12.jpg") no-repeat center; background-size: contain; }
-    #page13 { background: url("https://daryeaye.github.io/gt6/6-13.jpg") no-repeat center; background-size: contain; }
-    #page14 { background: url("https://daryeaye.github.io/gt6/6-14.jpg") no-repeat center; background-size: contain; }
-    #page15 { background: url("https://daryeaye.github.io/gt6/6-15.jpg") no-repeat center; background-size: contain; }
-    #page16 { background: url("https://daryeaye.github.io/gt6/6-16.jpg") no-repeat center; background-size: contain; }
-    #page17 { background: url("https://daryeaye.github.io/gt6/6-17.jpg") no-repeat center; background-size: contain; }
-    #page18 { background: url("https://daryeaye.github.io/gt6/6-18.jpg") no-repeat center; background-size: contain; }
-    #page19 { background: url("https://daryeaye.github.io/gt6/6-19.jpg") no-repeat center; background-size: contain; }
-    #page20 { background: url("https://daryeaye.github.io/gt6/6-20.jpg") no-repeat center; background-size: contain; }
-    #page21 { background: url("https://daryeaye.github.io/gt6/6-21.jpg") no-repeat center; background-size: contain; }
-    #page22 { background: url("https://daryeaye.github.io/gt6/6-22.jpg") no-repeat center; background-size: contain; }
-    #page23 { background: url("https://daryeaye.github.io/gt6/6-23.jpg") no-repeat center; background-size: contain; }
   </style>
-  <!-- html2canvas library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
+
 <body>
   <div id="app-container">
     <!-- Header -->
@@ -192,242 +253,326 @@
           <button id="confirmBtn" onclick="confirmName()">Confirm</button>
         </div>
       </div>
-      <div id="progressBar">
-        <div id="progress"></div>
-      </div>
+      <div id="progressBar"><div id="progress"></div></div>
       <span id="progressText">0% completed</span>
     </div>
-    <!-- Container -->
-    <div id="container">
-      <!-- MAIN PAGES (IDs: 1,2,3, and 12 to 23) -->
-      <!-- Page 1 -->
-      <div id="page1" class="page active">
-        <a href="https://daryeaye.github.io/geotopia/GT1%20Officer+.pdf" target="_blank">
-          <div class="box" style="left:12px; top:385px; width:120px; height:105px; border:1px solid red;"></div>
-        </a>
-        <a href="https://daryeaye.github.io/geotopia/GT1%20Professor+.pdf" target="_blank">
-          <div class="box" style="left:151px; top:385px; width:120px; height:105px; border:1px solid red;"></div>
-        </a>
-        <a href="https://daryeaye.github.io/geotopia/GT1%20Hacker+.pdf" target="_blank">
-          <div class="box" style="left:290px; top:385px; width:120px; height:105px; border:1px solid red;"></div>
-        </a>
-        <a href="https://www.youtube.com/watch?v=Fj98o3aFfk8" target="_blank" style="position:absolute; left:134px; top:500px; width:177px; height:32px; background-color: rgba(128,128,128,0.9); font-family: 'Caveat', cursive; font-size: 22px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: white;">What is the role for?</a>
+
+    <!-- NEW: Stage wrapper (anchors buttons to the canvas, but keeps them OUTSIDE) -->
+    <div id="stage">
+      <!-- Main Container -->
+      <div id="container">
+        <!-- MAIN PAGES -->
+        <div id="page1" class="page active"></div>
+
+        <div id="page2" class="page"></div>
+
+        <div id="page3" class="page">
+          <div id="boxC" class="box" style="left:733px; top:151px; width:57px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(4)">C</div>
+          <div id="boxE" class="box" style="left:338px; top:169px; width:60px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(5)">E</div>
+          <div id="boxA" class="box" style="left:479px; top:90px; width:56px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(8)">A</div>
+          <div id="boxD" class="box" style="left:165px; top:161px; width:42px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(9)">D</div>
+          <div id="boxH" class="box" style="left:479px; top:395px; width:74px; height:64px; background: rgba(255,0,0,0.5);" onclick="showSubPage(6)">H</div>
+          <div id="boxG" class="box" style="left:695px; top:345px; width:57px; height:64px; background: rgba(255,0,0,0.5);" onclick="showSubPage(7)">G</div>
+          <div id="boxF" class="box" style="left:386px; top:345px; width:42px; height:64px; background: rgba(255,0,0,0.5);" onclick="showSubPage(10)">F</div>
+          <div id="boxB" class="box" style="left:570px; top:135px; width:42px; height:64px; background: rgba(255,0,0,0.5);" onclick="showSubPage(11)">B</div>
+        </div>
+
+        <div id="page12" class="page"></div>
+
+        <div id="page13" class="page">
+          <input type="text" id="box1_page13" class="answer" style="left:866px; top:176px; width:72px; height:41px;">
+          <input type="text" id="box2_page13" class="answer" style="left:760px; top:283px; width:72px; height:40px;">
+          <img src="https://daryeaye.github.io/gt6/Cross3.gif" alt="Cross3" style="position:absolute; left:33px; top:301px; width:359px; height:205px; border:1px solid black;">
+          <input type="text" id="answer720_page13" class="answer" style="left:433px; top:418px; width:500px; height:95px;">
+        </div>
+
+        <div id="page14" class="page">
+          <input type="text" id="box1_page14" class="answer" style="left:866px; top:176px; width:72px; height:41px;">
+          <input type="text" id="box2_page14" class="answer" style="left:725px; top:252px; width:72px; height:41px;">
+          <img src="https://daryeaye.github.io/gt6/Cross4.gif" alt="Cross4" style="position:absolute; left:19px; top:294px; width:383px; height:218px; border:1px solid black;">
+          <input type="text" id="answer468_page14" class="answer" style="left:433px; top:418px; width:500px; height:95px;">
+        </div>
+
+        <div id="page15" class="page">
+          <input type="text" id="box1_page15" class="answer" style="left:792px; top:181px; width:72px; height:41px;">
+          <img src="https://daryeaye.github.io/gt6/Cross2.gif" alt="Cross2" style="position:absolute; left:82px; top:282px; width:250px; height:197px; border:1px solid black;">
+          <input type="text" id="box3_page15" class="answer" style="left:748px; top:283px; width:72px; height:40px;">
+          <input type="text" id="answer50_page15" class="answer" style="left:433px; top:418px; width:500px; height:95px;">
+        </div>
+
+        <div id="page16" class="page">
+          <input type="text" id="box1_page16" class="answer" style="left:755px; top:168px; width:72px; height:40px;">
+          <input type="text" id="box2_page16" class="answer" style="left:709px; top:280px; width:72px; height:41px;">
+          <img src="https://daryeaye.github.io/gt6/Cross1.gif" alt="Cross1" style="position:absolute; left:87px; top:292px; width:240px; height:196px; border:1px solid black;">
+          <input type="text" id="answer60_page16" class="answer" style="left:433px; top:418px; width:500px; height:95px;">
+        </div>
+
+        <div id="page17" class="page">
+          <img src="https://daryeaye.github.io/gt6/Cross3.gif" alt="Cross3" style="position:absolute; left:56px; top:23px; width:360px; height:205px; border:1px solid black;">
+          <input type="text" id="answer400_page17" class="answer" style="left:50px; top:369px; width:365px; height:96px;">
+        </div>
+
+        <div id="page18" class="page">
+          <img src="https://daryeaye.github.io/gt6/Cross2.gif" alt="Cross2" style="position:absolute; left:111px; top:28px; width:250px; height:197px; border:1px solid black;">
+          <input type="text" id="answer100_page18" class="answer" style="left:50px; top:369px; width:365px; height:96px;">
+        </div>
+
+        <div id="page19" class="page"></div>
+        <div id="page20" class="page"></div>
+        <div id="page21" class="page"></div>
+
+        <div id="page22" class="page">
+          <input type="text" id="answer5348_page22" class="answer" style="left:353px; top:464px; width:254px; height:52px; background:#fff;">
+          <button id="unlock_btn" style="position:absolute; left:421px; top:413px; width:118px; height:52px; border:1px solid black;" onclick="checkPasswordPage22()">Unlock</button>
+        </div>
+
+        <div id="page23" class="page" style="position: relative;">
+          <a href="https://daryeaye.github.io/gt6/chaermosi.html" target="_blank" style="
+            position: absolute;
+            left: 310px;
+            top: 435px;
+            width: 370px;
+            height: 45px;
+            background-color: rgba(255, 0, 0, 0.7);
+            display: block;
+            text-decoration: none;
+            pointer-events: auto;
+          "></a>
+        </div>
+
+        <!-- SUBORDINATE PAGES -->
+        <div id="page4_sub" class="page">
+          <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
+          <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+          <input type="text" id="box1_page4" class="answer" style="left:603px; top:284px; width:89px; height:47px;">
+          <input type="text" id="answer80_page4" class="answer" style="left:721px; top:284px; width:104px; height:47px;">
+          <input type="text" id="box3_page4" class="answer" style="left:312px; top:287px; width:257px; height:47px;">
+          <input type="text" id="box4_page4" class="answer" style="left:141px; top:315px; width:63px; height:42px;">
+          <input type="text" id="box5_page4" class="answer" style="left:118px; top:359px; width:63px; height:41px;">
+          <input type="text" id="box6_page4" class="answer" style="left:135px; top:402px; width:63px; height:42px;">
+          <input type="text" id="box7_page4" class="answer" style="left:306px; top:426px; width:63px; height:47px;">
+          <input type="text" id="box8_page4" class="answer" style="left:403px; top:426px; width:63px; height:47px;">
+          <input type="text" id="box9_page4" class="answer" style="left:500px; top:426px; width:63px; height:47px;">
+          <input type="text" id="box10_page4" class="answer" style="left:597px; top:426px; width:63px; height:47px;">
+          <input type="text" id="box11_page4" class="answer" style="left:694px; top:426px; width:63px; height:47px;">
+          <input type="text" id="answer138_page4" class="answer" style="left:786px; top:426px; width:89px; height:47px;">
+          <input type="text" id="box13_page4" class="answer" style="left:165px; top:446px; width:63px; height:43px;">
+        </div>
+
+        <div id="page5_sub" class="page">
+          <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
+          <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+          <input type="text" id="box1_page5" class="answer" style="left:603px; top:284px; width:89px; height:47px;">
+          <input type="text" id="answer84_page5" class="answer" style="left:721px; top:284px; width:104px; height:47px;">
+          <input type="text" id="box3_page5" class="answer" style="left:312px; top:287px; width:257px; height:47px;">
+          <input type="text" id="box4_page5" class="answer" style="left:141px; top:315px; width:63px; height:42px;">
+          <input type="text" id="box5_page5" class="answer" style="left:118px; top:359px; width:63px; height:41px;">
+          <input type="text" id="box6_page5" class="answer" style="left:135px; top:402px; width:63px; height:42px;">
+          <input type="text" id="box7_page5" class="answer" style="left:306px; top:426px; width:63px; height:47px;">
+          <input type="text" id="box8_page5" class="answer" style="left:403px; top:426px; width:63px; height:47px;">
+          <input type="text" id="box9_page5" class="answer" style="left:500px; top:426px; width:63px; height:47px;">
+          <input type="text" id="box10_page5" class="answer" style="left:597px; top:426px; width:63px; height:47px;">
+          <input type="text" id="box11_page5" class="answer" style="left:694px; top:426px; width:63px; height:47px;">
+          <input type="text" id="answer136_page5" class="answer" style="left:786px; top:426px; width:89px; height:47px;">
+          <input type="text" id="box13_page5" class="answer" style="left:165px; top:446px; width:63px; height:43px;">
+        </div>
+
+        <div id="page6_sub" class="page">
+          <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
+          <a href="https://www.geogebra.org/m/bxcrmmm6" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+          <input type="text" id="answer360" class="answer" style="left:310px; top:287px; width:615px; height:87px;">
+          <input type="text" id="answerTri_page6" class="answer" style="left:35px; top:392px; width:218px; height:98px;">
+          <input type="text" id="answer336" class="answer" style="left:310px; top:424px; width:615px; height:86px;">
+        </div>
+
+        <div id="page7_sub" class="page">
+          <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
+          <a href="https://www.geogebra.org/m/bxcrmmm6" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+          <input type="text" id="answer120" class="answer" style="left:310px; top:287px; width:615px; height:87px;">
+          <input type="text" id="answerTri_page7" class="answer" style="left:35px; top:392px; width:218px; height:98px;">
+          <input type="text" id="answer284" class="answer" style="left:310px; top:424px; width:615px; height:86px;">
+        </div>
+
+        <div id="page8_sub" class="page">
+          <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:516px; top:7px; width:259px; height:171px; border:1px solid black;">
+          <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+          <input type="text" id="box1_page8" class="answer" style="left:400px; top:284px; width:177px; height:47px;">
+          <input type="text" id="box2_page8" class="answer" style="left:610px; top:284px; width:87px; height:47px;">
+          <input type="text" id="answer64_page8" class="answer" style="left:730px; top:284px; width:110px; height:47px;">
+          <input type="text" id="answer144_page8" class="answer" style="left:749px; top:426px; width:99px; height:47px;">
+          <input type="text" id="box4_page8" class="answer" style="left:141px; top:315px; width:63px; height:42px;">
+          <input type="text" id="box5_page8" class="answer" style="left:118px; top:359px; width:63px; height:41px;">
+          <input type="text" id="box6_page8" class="answer" style="left:135px; top:402px; width:63px; height:42px;">
+          <input type="text" id="box7_page8" class="answer" style="left:305px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box8_page8" class="answer" style="left:392px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box9_page8" class="answer" style="left:484px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box10_page8" class="answer" style="left:568px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box11_page8" class="answer" style="left:659px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box13_page8" class="answer" style="left:165px; top:446px; width:63px; height:43px;">
+        </div>
+
+        <div id="page9_sub" class="page">
+          <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:516px; top:7px; width:259px; height:171px; border:1px solid black;">
+          <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+          <input type="text" id="box1_page9" class="answer" style="left:400px; top:284px; width:177px; height:47px;">
+          <input type="text" id="box2_page9" class="answer" style="left:610px; top:284px; width:87px; height:47px;">
+          <input type="text" id="answer50_page9" class="answer" style="left:730px; top:284px; width:110px; height:47px;">
+          <input type="text" id="box4_page9" class="answer" style="left:141px; top:315px; width:63px; height:42px;">
+          <input type="text" id="box5_page9" class="answer" style="left:118px; top:359px; width:63px; height:41px;">
+          <input type="text" id="box6_page9" class="answer" style="left:135px; top:402px; width:63px; height:42px;">
+          <input type="text" id="box7_page9" class="answer" style="left:305px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box8_page9" class="answer" style="left:392px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box9_page9" class="answer" style="left:484px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box10_page9" class="answer" style="left:568px; top:426px; width:68px; height:47px;">
+          <input type="text" id="box11_page9" class="answer" style="left:659px; top:426px; width:68px; height:47px;">
+          <input type="text" id="answer90_page9" class="answer" style="left:749px; top:426px; width:99px; height:47px;">
+          <input type="text" id="box13_page9" class="answer" style="left:165px; top:446px; width:63px; height:43px;">
+        </div>
+
+        <div id="page10_sub" class="page">
+          <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
+          <a href="https://www.geogebra.org/m/bxcrmmm6" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+          <input type="text" id="answer114_page10" class="answer" style="left:310px; top:287px; width:615px; height:87px;">
+          <input type="text" id="answerSqu_page10" class="answer" style="left:35px; top:392px; width:218px; height:98px;">
+          <input type="text" id="answer156_page10" class="answer" style="left:310px; top:424px; width:615px; height:86px;">
+        </div>
+
+        <div id="page11_sub" class="page">
+          <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
+          <a href="https://www.geogebra.org/m/bxcrmmm6" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
+          <input type="text" id="box1_page11" class="answer" style="left:310px; top:287px; width:615px; height:87px;">
+          <input type="text" id="answerSqu_page11" class="answer" style="left:35px; top:392px; width:218px; height:98px;">
+          <input type="text" id="answer108_page11" class="answer" style="left:310px; top:424px; width:615px; height:86px;">
+        </div>
       </div>
-      <!-- Page 2 -->
-      <div id="page2" class="page">
-      </div>
-      <!-- Page 3 (Hub) -->
-      <div id="page3" class="page">
-        <!-- Hub boxes with updated color grouping and IDs: -->
-        <div id="boxC" class="box" style="left:733px; top:151px; width:57px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(4)">C</div>
-        <div id="boxE" class="box" style="left:338px; top:169px; width:60px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(5)">E</div>
-        <div id="boxA" class="box" style="left:479px; top:90px; width:56px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(8)">A</div>
-        <div id="boxD" class="box" style="left:165px; top:161px; width:42px; height:64px; background: rgba(0,0,255,0.5);" onclick="showSubPage(9)">D</div>
-        <div id="boxH" class="box" style="left:479px; top:395px; width:74px; height:64px; background: rgba(255,0,0,0.5);" onclick="showSubPage(6)">H</div>
-        <div id="boxG" class="box" style="left:695px; top:345px; width:57px; height:64px; background: rgba(255,0,0,0.5);" onclick="showSubPage(7)">G</div>
-        <div id="boxF" class="box" style="left:386px; top:345px; width:42px; height:64px; background: rgba(255,0,0,0.5);" onclick="showSubPage(10)">F</div>
-        <div id="boxB" class="box" style="left:570px; top:135px; width:42px; height:64px; background: rgba(255,0,0,0.5);" onclick="showSubPage(11)">B</div>
-      </div>
-      <!-- Page 12 (no middle text) -->
-      <div id="page12" class="page">
-      </div>
-      <!-- Pages 13 to 22 (Main pages with interactive boxes) -->
-      <div id="page13" class="page">
-        <input type="text" id="box1_page13" class="answer" style="left:866px; top:176px; width:72px; height:41px; background: lightblue;">
-        <input type="text" id="box2_page13" class="answer" style="left:760px; top:283px; width:72px; height:40px; background: lightblue;">
-        <img src="https://daryeaye.github.io/gt6/Cross3.gif" alt="Cross3" style="position:absolute; left:33px; top:301px; width:359px; height:205px; border:1px solid black;">
-        <input type="text" id="answer720_page13" class="answer" style="left:433px; top:418px; width:500px; height:95px; background: lightblue;">
-      </div>
-      <div id="page14" class="page">
-        <input type="text" id="box1_page14" class="answer" style="left:866px; top:176px; width:72px; height:41px; background: lightblue;">
-        <input type="text" id="box2_page14" class="answer" style="left:725px; top:252px; width:72px; height:41px; background: lightblue;">
-        <img src="https://daryeaye.github.io/gt6/Cross4.gif" alt="Cross4" style="position:absolute; left:19px; top:294px; width:383px; height:218px; border:1px solid black;">
-        <input type="text" id="answer468_page14" class="answer" style="left:433px; top:418px; width:500px; height:95px; background: lightblue;">
-      </div>
-      <div id="page15" class="page">
-        <input type="text" id="box1_page15" class="answer" style="left:792px; top:181px; width:72px; height:41px; background: lightblue;">
-        <img src="https://daryeaye.github.io/gt6/Cross2.gif" alt="Cross2" style="position:absolute; left:82px; top:282px; width:250px; height:197px; border:1px solid black;">
-        <input type="text" id="box3_page15" class="answer" style="left:748px; top:283px; width:72px; height:40px; background: lightblue;">
-        <input type="text" id="answer50_page15" class="answer" style="left:433px; top:418px; width:500px; height:95px; background: lightblue;">
-      </div>
-      <div id="page16" class="page">
-        <input type="text" id="box1_page16" class="answer" style="left:755px; top:168px; width:72px; height:40px; background: lightblue;">
-        <input type="text" id="box2_page16" class="answer" style="left:709px; top:280px; width:72px; height:41px; background: lightblue;">
-        <img src="https://daryeaye.github.io/gt6/Cross1.gif" alt="Cross1" style="position:absolute; left:87px; top:292px; width:240px; height:196px; border:1px solid black;">
-        <input type="text" id="answer60_page16" class="answer" style="left:433px; top:418px; width:500px; height:95px; background: lightblue;">
-      </div>
-      <div id="page17" class="page">
-        <img src="https://daryeaye.github.io/gt6/Cross3.gif" alt="Cross3" style="position:absolute; left:56px; top:23px; width:360px; height:205px; border:1px solid black;">
-        <input type="text" id="answer400_page17" class="answer" style="left:50px; top:369px; width:365px; height:96px; background: lightblue;">
-      </div>
-      <div id="page18" class="page">
-        <img src="https://daryeaye.github.io/gt6/Cross2.gif" alt="Cross2" style="position:absolute; left:111px; top:28px; width:250px; height:197px; border:1px solid black;">
-        <input type="text" id="answer100_page18" class="answer" style="left:50px; top:369px; width:365px; height:96px; background: lightblue;">
-      </div>
-      <!-- Pages 19, 20, 21: Remove any middle text -->
-      <div id="page19" class="page">
-      </div>
-      <div id="page20" class="page">
-      </div>
-      <div id="page21" class="page">
-      </div>
-      <!-- Page 22 with unlock button -->
-      <div id="page22" class="page">
-        <input type="text" id="answer5348_page22" class="answer" style="left:353px; top:464px; width:254px; height:52px; background: #ffffffff;">
-        <button id="unlock_btn" style="position:absolute; left:421px; top:413px; width:118px; height:52px; border: 1px solid black;" onclick="checkPasswordPage22()">Unlock</button>
-      </div>
-      <div id="page23" class="page" style="position: relative;">
-        <a href="https://daryeaye.github.io/gt6/chaermosi.html" target="_blank" style="
-          position: absolute;
-          left: 310px;
-          top: 435px;
-          width: 370px;
-          height: 45px;
-          background-color: rgba(255, 0, 0, 0.7);
-          display: block;
-          text-decoration: none;
-          pointer-events: auto;
-        "></a>
-      </div>
-      
-      <!-- SUBORDINATE PAGES -->
-      <!-- Page 4_sub -->
-      <div id="page4_sub" class="page">
-        <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
-        <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-        <input type="text" id="box1_page4" class="answer" style="left:603px; top:284px; width:89px; height:47px; background: lightblue;">
-        <input type="text" id="answer80_page4" class="answer" style="left:721px; top:284px; width:104px; height:47px; background: lightblue;">
-        <input type="text" id="box3_page4" class="answer" style="left:312px; top:287px; width:257px; height:47px; background: lightblue;">
-        <input type="text" id="box4_page4" class="answer" style="left:141px; top:315px; width:63px; height:42px; background: lightblue;">
-        <input type="text" id="box5_page4" class="answer" style="left:118px; top:359px; width:63px; height:41px; background: lightblue;">
-        <input type="text" id="box6_page4" class="answer" style="left:135px; top:402px; width:63px; height:42px; background: lightblue;">
-        <input type="text" id="box7_page4" class="answer" style="left:306px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="box8_page4" class="answer" style="left:403px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="box9_page4" class="answer" style="left:500px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="box10_page4" class="answer" style="left:597px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="box11_page4" class="answer" style="left:694px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="answer138_page4" class="answer" style="left:786px; top:426px; width:89px; height:47px; background: lightblue;">
-        <input type="text" id="box13_page4" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
-      </div>
-      
-      <!-- Page 5_sub -->
-      <div id="page5_sub" class="page">
-        <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
-        <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-        <input type="text" id="box1_page5" class="answer" style="left:603px; top:284px; width:89px; height:47px; background: lightblue;">
-        <input type="text" id="answer84_page5" class="answer" style="left:721px; top:284px; width:104px; height:47px; background: lightblue;">
-        <input type="text" id="box3_page5" class="answer" style="left:312px; top:287px; width:257px; height:47px; background: lightblue;">
-        <input type="text" id="box4_page5" class="answer" style="left:141px; top:315px; width:63px; height:42px; background: lightblue;">
-        <input type="text" id="box5_page5" class="answer" style="left:118px; top:359px; width:63px; height:41px; background: lightblue;">
-        <input type="text" id="box6_page5" class="answer" style="left:135px; top:402px; width:63px; height:42px; background: lightblue;">
-        <input type="text" id="box7_page5" class="answer" style="left:306px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="box8_page5" class="answer" style="left:403px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="box9_page5" class="answer" style="left:500px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="box10_page5" class="answer" style="left:597px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="box11_page5" class="answer" style="left:694px; top:426px; width:63px; height:47px; background: lightblue;">
-        <input type="text" id="answer136_page5" class="answer" style="left:786px; top:426px; width:89px; height:47px; background: lightblue;">
-        <input type="text" id="box13_page5" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
-      </div>
-      
-      <!-- Page 6_sub -->
-      <div id="page6_sub" class="page">
-        <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
-        <a href="https://www.geogebra.org/m/bxcrmmm6" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-        <input type="text" id="answer360" class="answer" style="left:310px; top:287px; width:615px; height:87px; background: lightblue;">
-        <input type="text" id="answerTri_page6" class="answer" style="left:35px; top:392px; width:218px; height:98px; background: lightblue;">
-        <input type="text" id="answer336" class="answer" style="left:310px; top:424px; width:615px; height:86px; background: lightblue;">
-      </div>
-      
-      <!-- Page 7_sub -->
-      <div id="page7_sub" class="page">
-        <img src="https://daryeaye.github.io/gt6/TP.gif" alt="TP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
-        <a href="https://www.geogebra.org/m/bxcrmmm6" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-        <input type="text" id="answer120" class="answer" style="left:310px; top:287px; width:615px; height:87px; background: lightblue;">
-        <input type="text" id="answerTri_page7" class="answer" style="left:35px; top:392px; width:218px; height:98px; background: lightblue;">
-        <input type="text" id="answer284" class="answer" style="left:310px; top:424px; width:615px; height:86px; background: lightblue;">
-      </div>
-      
-      <!-- Page 8_sub -->
-      <div id="page8_sub" class="page">
-        <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:516px; top:7px; width:259px; height:171px; border:1px solid black;">
-        <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-        <input type="text" id="box1_page8" class="answer" style="left:400px; top:284px; width:177px; height:47px; background: lightblue;">
-        <input type="text" id="box2_page8" class="answer" style="left:610px; top:284px; width:87px; height:47px; background: lightblue;">
-        <input type="text" id="answer64_page8" class="answer" style="left:730px; top:284px; width:110px; height:47px; background: lightblue;">
-        <input type="text" id="answer144_page8" class="answer" style="left:749px; top:426px; width:99px; height:47px; background: lightblue;">
-        <input type="text" id="box4_page8" class="answer" style="left:141px; top:315px; width:63px; height:42px; background: lightblue;">
-        <input type="text" id="box5_page8" class="answer" style="left:118px; top:359px; width:63px; height:41px; background: lightblue;">
-        <input type="text" id="box6_page8" class="answer" style="left:135px; top:402px; width:63px; height:42px; background: lightblue;">
-        <input type="text" id="box7_page8" class="answer" style="left:305px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box8_page8" class="answer" style="left:392px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box9_page8" class="answer" style="left:484px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box10_page8" class="answer" style="left:568px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box11_page8" class="answer" style="left:659px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box13_page8" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
-      </div>
-      
-      <div id="page9_sub" class="page">
-        <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:516px; top:7px; width:259px; height:171px; border:1px solid black;">
-        <a href="https://www.geogebra.org/m/e5gz5gfc" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-        <input type="text" id="box1_page9" class="answer" style="left:400px; top:284px; width:177px; height:47px; background: lightblue;">
-        <input type="text" id="box2_page9" class="answer" style="left:610px; top:284px; width:87px; height:47px; background: lightblue;">
-        <input type="text" id="answer50_page9" class="answer" style="left:730px; top:284px; width:110px; height:47px; background: lightblue;">
-        <input type="text" id="box4_page9" class="answer" style="left:141px; top:315px; width:63px; height:42px; background: lightblue;">
-        <input type="text" id="box5_page9" class="answer" style="left:118px; top:359px; width:63px; height:41px; background: lightblue;">
-        <input type="text" id="box6_page9" class="answer" style="left:135px; top:402px; width:63px; height:42px; background: lightblue;">
-        <input type="text" id="box7_page9" class="answer" style="left:305px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box8_page9" class="answer" style="left:392px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box9_page9" class="answer" style="left:484px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box10_page9" class="answer" style="left:568px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="box11_page9" class="answer" style="left:659px; top:426px; width:68px; height:47px; background: lightblue;">
-        <input type="text" id="answer90_page9" class="answer" style="left:749px; top:426px; width:99px; height:47px; background: lightblue;">
-        <input type="text" id="box13_page9" class="answer" style="left:165px; top:446px; width:63px; height:43px; background: lightblue;">
-      </div>
-      
-      <!-- Page 10_sub -->
-      <div id="page10_sub" class="page">
-        <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
-        <a href="https://www.geogebra.org/m/bxcrmmm6" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-        <input type="text" id="answer114_page10" class="answer" style="left:310px; top:287px; width:615px; height:87px; background: lightblue;">
-        <input type="text" id="answerSqu_page10" class="answer" style="left:35px; top:392px; width:218px; height:98px; background: lightblue;">
-        <input type="text" id="answer156_page10" class="answer" style="left:310px; top:424px; width:615px; height:86px; background: lightblue;">
-      </div>
-      
-      <!-- Page 11_sub -->
-      <div id="page11_sub" class="page">
-        <img src="https://daryeaye.github.io/gt6/SPP.gif" alt="SPP.gif" style="position:absolute; left:499px; top:23px; width:304px; height:155px; border:1px solid black;">
-        <a href="https://www.geogebra.org/m/bxcrmmm6" target="_blank" style="position:absolute; left:433px; top:181px; width:499px; height:56px; display:block; border:1px solid black; background: transparent; text-decoration:none;"></a>
-        <input type="text" id="box1_page11" class="answer" style="left:310px; top:287px; width:615px; height:87px; background: lightblue;">
-        <input type="text" id="answerSqu_page11" class="answer" style="left:35px; top:392px; width:218px; height:98px; background: lightblue;">
-        <input type="text" id="answer108_page11" class="answer" style="left:310px; top:424px; width:615px; height:86px; background: lightblue;">
+
+      <!-- Navigation Buttons (now OUTSIDE #container but still anchored to it) -->
+      <div id="nav-buttons">
+        <button id="prev-btn" onclick="prevPage()">Previous</button>
+        <button id="next-btn" onclick="nextPage()">Next</button>
       </div>
     </div>
-    <!-- Navigation Buttons -->
-    <div id="nav-buttons">
-      <button id="prev-btn" onclick="prevPage()">Previous</button>
-      <button id="next-btn" onclick="nextPage()">Next</button>
+
+    <!-- SECOND CANVAS: Role selection + PDF viewer -->
+    <div id="role-container">
+      <div id="role-stage">
+        <!-- Hotspots scaled from 1600x900 -> 960x540 (x0.6) -->
+        <button class="role-hotspot" id="hotspot-officer"   title="Officer"   style="left:117px; top:73px; width:197px; height:166px;"></button>
+        <button class="role-hotspot" id="hotspot-professor" title="Professor" style="left:382px; top:73px; width:197px; height:166px;"></button>
+        <button class="role-hotspot" id="hotspot-hacker"    title="Hacker"    style="left:647px; top:73px; width:197px; height:166px;"></button>
+        <button class="role-hotspot" id="hotspot-video"     title="What is the role for?" style="left:301px; top:460px; width:358px; height:31px;"></button>
+
+        <!-- Optional "Back to roles" button overlay (only visible when PDF open) -->
+        <button id="role-back" style="position:absolute; left:10px; top:10px; display:none; z-index:5;">Back</button>
+      </div>
+
+      <div id="pdf-view">
+        <div id="pdf-scroll"></div>
+      </div>
+    </div>
+
+    <!-- Side Widget -->
+    <div id="side-widget">
+      <p class="title">Need translation?</p>
+      <button id="select-text">Select Text</button>
+      <p>
+        <a href="https://translate.google.com/?sl=en&tl=es&op=images" target="_blank">
+          Click me and paste from clipboard
+        </a>
+      </p>
     </div>
   </div>
+
   <script>
-    // Setup persistence for input.answer elements
+    // PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+    const ROLE_PDFS = {
+      officer:   "https://daryeaye.github.io/geotopia/GT1%20Officer+.pdf",
+      professor: "https://daryeaye.github.io/geotopia/GT1%20Professor+.pdf",
+      hacker:    "https://daryeaye.github.io/geotopia/GT1%20Hacker+.pdf"
+    };
+
+    const roleStage = document.getElementById("role-stage");
+    const pdfView   = document.getElementById("pdf-view");
+    const pdfScroll = document.getElementById("pdf-scroll");
+    const roleBack  = document.getElementById("role-back");
+
+    async function loadPdfInSecondCanvas(url){
+      roleStage.style.display = "none";
+      pdfView.style.display = "block";
+      pdfScroll.innerHTML = "";
+      roleBack.style.display = "none";
+
+      try{
+        const loadingTask = pdfjsLib.getDocument({ url });
+        const pdf = await loadingTask.promise;
+
+        const targetWidth = 940;
+        for(let pageNum=1; pageNum<=pdf.numPages; pageNum++){
+          const page = await pdf.getPage(pageNum);
+
+          const viewport1 = page.getViewport({ scale: 1 });
+          const scale = targetWidth / viewport1.width;
+          const viewport = page.getViewport({ scale });
+
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+
+          pdfScroll.appendChild(canvas);
+          await page.render({ canvasContext: ctx, viewport }).promise;
+        }
+
+        // show back button (overlayed on role stage, so toggle temporarily)
+        roleBack.style.display = "block";
+        roleBack.onclick = () => {
+          pdfView.style.display = "none";
+          roleStage.style.display = "block";
+          roleBack.style.display = "none";
+        };
+      }catch(err){
+        console.error(err);
+        alert("PDF failed to load in the canvas. Check Console for details.");
+        pdfView.style.display = "none";
+        roleStage.style.display = "block";
+      }
+    }
+
+    document.getElementById("hotspot-officer").addEventListener("click", () => loadPdfInSecondCanvas(ROLE_PDFS.officer));
+    document.getElementById("hotspot-professor").addEventListener("click", () => loadPdfInSecondCanvas(ROLE_PDFS.professor));
+    document.getElementById("hotspot-hacker").addEventListener("click", () => loadPdfInSecondCanvas(ROLE_PDFS.hacker));
+    document.getElementById("hotspot-video").addEventListener("click", () => {
+      window.open("https://www.youtube.com/watch?v=Fj98o3aFfk8", "_blank");
+    });
+
+    // ----------------- Your original app logic (kept) -----------------
+
     function setupPersistence() {
+      // save answers
       document.querySelectorAll("input.answer").forEach(function(el) {
         let stored = localStorage.getItem(el.id);
-        if(stored !== null) {
-          el.value = stored;
-        }
+        if(stored !== null) el.value = stored;
         el.addEventListener("input", function() {
           localStorage.setItem(el.id, el.value);
         });
       });
+
+      // save username
+      const savedName = localStorage.getItem("username");
+      if(savedName && savedName.trim() !== "") {
+        const u = document.getElementById("username");
+        u.value = savedName;
+        u.disabled = true;
+      }
     }
-    
-    // Global progress tracking for 23 main pages
+
+    // Global progress tracking for 23 pages
     let visitedPages = [];
     function markVisited(pageNum) {
-      if(!visitedPages.includes(pageNum)) {
-        visitedPages.push(pageNum);
-      }
+      if(!visitedPages.includes(pageNum)) visitedPages.push(pageNum);
       updateProgress();
     }
     function updateProgress() {
@@ -435,42 +580,49 @@
       document.getElementById('progress').style.width = progressPercent + '%';
       document.getElementById('progressText').innerText = progressPercent.toFixed(0) + '% completed';
     }
-    
-    // Global subordinate pages completion status
-    let subPageStatus = {4: false, 5: false, 6: false, 7: false, 8: false, 9: false, 10: false, 11: false};
-    
-    // Main pages array (IDs 1,2,3 and 12..23)
+
+    // Subpages status
+    let subPageStatus = {4:false,5:false,6:false,7:false,8:false,9:false,10:false,11:false};
+
     let currentPage = 1;
-    const mainPages = [1, 2, 3, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-    
+    const mainPages = [1,2,3,12,13,14,15,16,17,18,19,20,21,22,23];
+
     function showPage(pageNum) {
-      // Hide all main pages and subordinate pages
       mainPages.forEach(n => {
         let el = document.getElementById('page' + n);
         if(el) el.classList.remove('active');
       });
       document.querySelectorAll("[id$='_sub']").forEach(el => el.classList.remove('active'));
+
       document.getElementById('page' + pageNum).classList.add('active');
-      // Restore nav buttons for main pages
-      document.getElementById("nav-buttons").innerHTML = "<button id='prev-btn' onclick='prevPage()'>Previous</button><button id='next-btn' onclick='nextPage()'>Next</button>";
+
+      document.getElementById("nav-buttons").innerHTML =
+        "<button id='prev-btn' onclick='prevPage()'>Previous</button>" +
+        "<button id='next-btn' onclick='nextPage()'>Next</button>";
+
       currentPage = pageNum;
       markVisited(pageNum);
+
+      if (pageNum === 1) {
+        document.getElementById("prev-btn").style.display = "none";
+      }
     }
-    
+
     function showSubPage(pageNum) {
-      // Hide main pages and subordinate pages
       mainPages.forEach(n => {
         let el = document.getElementById('page' + n);
         if(el) el.classList.remove('active');
       });
       document.querySelectorAll("[id$='_sub']").forEach(el => el.classList.remove('active'));
+
       document.getElementById('page' + pageNum + "_sub").classList.add('active');
       currentPage = pageNum;
       markVisited(pageNum);
-      // Replace nav-buttons with a Back button
-      document.getElementById("nav-buttons").innerHTML = "<button id='back-btn' onclick='backFromSubPage()'>Back</button>";
+
+      document.getElementById("nav-buttons").innerHTML =
+        "<button id='back-btn' onclick='backFromSubPage()'>Finish</button>";
     }
-    
+
     function backFromSubPage() {
       switch(currentPage) {
         case 4: checkAnswersAndGoBackPage4(); break;
@@ -483,9 +635,10 @@
         case 11: checkAnswersAndGoBackPage11(); break;
       }
     }
-    
+
     function nextPage() {
       const idx = mainPages.indexOf(currentPage);
+
       if(currentPage === 3) {
         for(let key in subPageStatus) {
           if(!subPageStatus[key]) {
@@ -494,6 +647,7 @@
           }
         }
       }
+
       const validations = {
         13: () => document.getElementById('answer720_page13').value.toLowerCase().includes("720"),
         14: () => document.getElementById('answer468_page14').value.toLowerCase().includes("468"),
@@ -503,22 +657,20 @@
         18: () => document.getElementById('answer100_page18').value.toLowerCase().includes("100"),
         22: () => true
       };
+
       if(validations[currentPage] && !validations[currentPage]()) {
         alert("🤨 The Mayor needs you to be more professional. Check your answer!");
         return;
       }
-      if(idx < mainPages.length - 1) {
-        showPage(mainPages[idx + 1]);
-      }
+
+      if(idx < mainPages.length - 1) showPage(mainPages[idx + 1]);
     }
-    
+
     function prevPage() {
       const idx = mainPages.indexOf(currentPage);
-      if(idx > 0) {
-        showPage(mainPages[idx - 1]);
-      }
+      if(idx > 0) showPage(mainPages[idx - 1]);
     }
-    
+
     function checkAnswersAndGoBackPage4() {
       const ans80 = document.getElementById('answer80_page4').value.toLowerCase();
       const ans138 = document.getElementById('answer138_page4').value.toLowerCase();
@@ -610,9 +762,9 @@
         showPage(3);
       }
     }
-    
+
     function checkPasswordPage22() {
-      let ans = document.getElementById('answer5348_page22').value;
+      let ans = document.getElementById('answer5348_page22').value.trim();
       if (ans === "5348") {
         document.getElementById('answer5348_page22').value = "";
         localStorage.setItem('answer5348_page22', "");
@@ -622,7 +774,7 @@
         alert("Did you finish the roof building?");
       }
     }
-    
+
     function confirmName() {
       const name = document.getElementById("username").value.trim();
       if(name !== "") {
@@ -633,37 +785,26 @@
         alert("Please enter a name.");
       }
     }
-    
+
     document.addEventListener("DOMContentLoaded", function() {
       setupPersistence();
       showPage(currentPage);
     });
   </script>
-  
-  <!-- Side Widget HTML -->
-  <div id="side-widget">
-    <p class="title">Need translation?</p>
-    <button id="select-text">Select Text</button>
-    <p>
-      <a href="https://translate.google.com/?sl=en&tl=es&op=images" target="_blank">
-        Click me and paste from clipboard
-      </a>
-    </p>
-  </div>
+
   <!-- Side Widget Script -->
   <script>
     document.getElementById('select-text').addEventListener('click', function() {
-      // Create overlay for user selection
       const overlay = document.createElement('div');
       overlay.id = 'selection-overlay';
       document.body.appendChild(overlay);
-      
+
       let startX, startY, selectionBox;
-      
+
       overlay.addEventListener('mousedown', function(e) {
         startX = e.clientX;
         startY = e.clientY;
-        
+
         selectionBox = document.createElement('div');
         selectionBox.id = 'selection-box';
         selectionBox.style.left = startX + 'px';
@@ -671,7 +812,7 @@
         selectionBox.style.width = '0px';
         selectionBox.style.height = '0px';
         overlay.appendChild(selectionBox);
-        
+
         function mouseMoveHandler(e) {
           const currentX = e.clientX;
           const currentY = e.clientY;
@@ -684,31 +825,30 @@
           selectionBox.style.width = rectWidth + 'px';
           selectionBox.style.height = rectHeight + 'px';
         }
-        
+
         function mouseUpHandler(e) {
           overlay.removeEventListener('mousemove', mouseMoveHandler);
           overlay.removeEventListener('mouseup', mouseUpHandler);
-          
+
           const boxRect = selectionBox.getBoundingClientRect();
           document.body.removeChild(overlay);
-          
-          // Target the main app container to capture
+
           const target = document.getElementById('app-container');
           const targetRect = target.getBoundingClientRect();
-          
+
           html2canvas(target, { useCORS: true, allowTaint: false }).then(canvas => {
             const scaleFactor = canvas.width / targetRect.width;
             const sx = (boxRect.left - targetRect.left) * scaleFactor;
             const sy = (boxRect.top - targetRect.top) * scaleFactor;
             const sWidth = boxRect.width * scaleFactor;
             const sHeight = boxRect.height * scaleFactor;
-            
+
             const croppedCanvas = document.createElement('canvas');
             croppedCanvas.width = sWidth;
             croppedCanvas.height = sHeight;
             const ctx = croppedCanvas.getContext('2d');
             ctx.drawImage(canvas, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
-            
+
             croppedCanvas.toBlob(blob => {
               if (blob) {
                 const item = new ClipboardItem({ 'image/png': blob });
@@ -722,11 +862,16 @@
             });
           });
         }
-        
+
         overlay.addEventListener('mousemove', mouseMoveHandler);
         overlay.addEventListener('mouseup', mouseUpHandler);
       });
     });
   </script>
+
+  <!-- @XDY. All rights reserved. This code is the intellectual property of XDY.
+       Unauthorized copying, reproduction, or redistribution is strictly prohibited.
+       For educational use only. Contact the author for permissions. -->
 </body>
 </html>
+
