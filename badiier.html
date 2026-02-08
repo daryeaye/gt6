@@ -251,6 +251,7 @@
         <div>
           <input type="text" id="username" placeholder="Enter your name" style="font-size:16px; padding:5px;">
           <button id="confirmBtn" onclick="confirmName()">Confirm</button>
+          <button id="introBtn" onclick="openIntro()">Intro</button>
         </div>
       </div>
       <div id="progressBar"><div id="progress"></div></div>
@@ -785,6 +786,11 @@
         alert("Please enter a name.");
       }
     }
+
+    function openIntro(){
+    window.open("https://www.youtube.com/watch?v=PFy9wgmUADc", "_blank");
+    }
+
 
     document.addEventListener("DOMContentLoaded", function() {
       setupPersistence();
