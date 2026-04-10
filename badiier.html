@@ -593,7 +593,6 @@
               Open me in new tab!
             </button>
             <input type="text" id="answer5348_page22" class="answer" style="left:353px; top:464px; width:254px; height:52px; background:#fff;">
-            <button id="unlock_btn" style="position:absolute; left:421px; top:413px; width:118px; height:52px; border:1px solid black;" onclick="checkPasswordPage22()">Unlock</button>
           </div>
 
           <div id="page23" class="page" style="position: relative;">            
@@ -1192,18 +1191,30 @@
     async function checkAnswersAndGoBackPage9() { await finishSubPageIfValid(9, pageContainsValue("answer50_page9","50") && pageContainsValue("answer90_page9","90")); }
     async function checkAnswersAndGoBackPage10() { await finishSubPageIfValid(10, pageContainsValue("answer114_page10","114") && pageContainsValue("answerSqu_page10","squ") && pageContainsValue("answer156_page10","156")); }
     async function checkAnswersAndGoBackPage11() { await finishSubPageIfValid(11, pageContainsValue("answerSqu_page11","squ") && pageContainsValue("answer108_page11","108")); }
-    async function checkPasswordPage22() {
+
+    function initAutoUnlockPage22() {
       const input = document.getElementById("answer5348_page22");
-      const ans = (input.value || "").trim();
-      if (ans === "5348") {
-        input.value = "";
-        queueCloudSave();
-        window.open(FINAL_UNLOCK_URL, "_blank");
-        await showPage(23);
-      } else {
-        showMessagePopup(ROOF_MESSAGE);
-      }
+      if (!input) return;
+    
+      let justOpened = false;
+    
+      input.addEventListener("input", async function () {
+        const ans = (input.value || "").trim();
+    
+        if (ans === "5348" && !justOpened) {
+          justOpened = true;
+          input.value = "";
+          queueCloudSave();
+          window.open(FINAL_UNLOCK_URL, "_blank");
+          await showPage(23);
+    
+          setTimeout(() => {
+            justOpened = false;
+          }, 300);
+        }
+      });
     }
+    
     function exitPdfMode() {
       const roleContainer = document.getElementById("role-container");
       const viewer = document.getElementById("pdfViewer");
@@ -1371,6 +1382,7 @@
       initTranslatorWidget();
       initTranslationScreenshotTool();
       initCloudSaveInputs();
+      initAutoUnlockPage22();
       document.getElementById("introBtn").addEventListener("click", openIntro);
       document.getElementById("authRegisterBtn").addEventListener("click", registerUser);
       document.getElementById("authLoginBtn").addEventListener("click", loginUser);
