@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Merchant's Quest 4</title>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+
   <style>
     body, html {
       margin: 0;
@@ -15,11 +16,13 @@
       background: url('https://daryeaye.github.io/geotopia/thatsit2.png') no-repeat center center fixed;
       background-size: cover;
     }
+
     #app-container {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
+
     /* Container for pages */
     #container {
       position: relative;
@@ -28,6 +31,7 @@
       border: 1px solid #ccc;
       overflow: hidden;
     }
+
     .page {
       position: absolute;
       top: 0;
@@ -36,30 +40,51 @@
       height: 540px;
       display: none;
     }
+
     .page.active {
       display: block;
     }
-    /* Background images for the two pages */
+
+    /* Background images for the pages */
     #page1 {
+      background: url("https://daryeaye.github.io/geotopia/89.jpg") no-repeat center center;
+      background-size: cover;
+    }
+
+    #page2 {
       background: url("https://daryeaye.github.io/gt6/6-B.jpg") no-repeat center center;
       background-size: cover;
     }
-    #page2 {
+
+    #page3 {
       background: url("https://daryeaye.github.io/gt6/6-A.jpg") no-repeat center center;
       background-size: cover;
     }
-    /* Styling for the link boxes */
+
+    /* Transparent clickable box for the new first page */
+    .transparent-box {
+      position: absolute;
+      left: 84px;
+      top: 123px;
+      width: 229px;
+      height: 268px;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+
+    /* Styling for the original link boxes */
     .link-box {
       position: absolute;
       border: 2px solid red;
-      /* Prevent text selection */
       user-select: none;
-      /* Remove default underline for links */
       text-decoration: none;
     }
+
     #nav-buttons {
       margin-top: 10px;
     }
+
     button {
       font-family: "Caveat", cursive;
       font-size: 20px;
@@ -73,11 +98,10 @@
   
   <!-- Side Widget Styles -->
   <style>
-    /* Side widget styling */
     #side-widget {
       position: fixed;
       top: 20px;
-      right: 20px; /* Change to left:20px; if you prefer */
+      right: 20px;
       width: 200px;
       height: 200px;
       background: #f9f9f9;
@@ -87,11 +111,13 @@
       font-family: 'Caveat', cursive;
       z-index: 999;
     }
+
     #side-widget p.title {
       font-size: 24px;
       text-align: center;
       margin: 0 0 10px;
     }
+
     #side-widget button,
     #side-widget a {
       display: block;
@@ -105,6 +131,7 @@
       text-decoration: none;
       color: inherit;
     }
+
     /* Selection overlay styles */
     #selection-overlay {
       position: fixed;
@@ -115,6 +142,7 @@
       cursor: crosshair;
       z-index: 1000;
     }
+
     #selection-box {
       position: absolute;
       border: 2px dashed red;
@@ -125,27 +153,41 @@
   <!-- Include html2canvas library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
+
 <body>
   <div id="app-container">
     <div id="container">
+
+      <!-- New Page 1 -->
       <div id="page1" class="page active">
+        <a href="https://daryeaye.github.io/geotopia/89.png" target="_blank">
+          <div class="transparent-box"></div>
+        </a>
+      </div>
+
+      <!-- Original Page 1, now Page 2 -->
+      <div id="page2" class="page">
         <!-- Red boxes removed -->
       </div>
-      <div id="page2" class="page">
-        <!-- Added link boxes -->
+
+      <!-- Original Page 2, now Page 3 -->
+      <div id="page3" class="page">
+        <!-- Original link boxes -->
         <a href="https://www.geogebra.org/3d/qgs5zfss" class="link-box" style="left:241px; top:290px; width:121px; height:52px;" target="_blank"></a>
         <a href="https://www.geogebra.org/3d/xynhkubt" class="link-box" style="left:420px; top:290px; width:120px; height:52px;" target="_blank"></a>
         <a href="https://www.geogebra.org/3d/bfuufrdb" class="link-box" style="left:598px; top:290px; width:121px; height:52px;" target="_blank"></a>
         <a href="https://www.geogebra.org/3d/mru4rngh" class="link-box" style="left:227px; top:91px; width:201px; height:62px;" target="_blank"></a>
       </div>
+
     </div>
+
     <div id="nav-buttons">
       <button id="prev-btn" onclick="prevPage()">Previous</button>
       <button id="next-btn" onclick="nextPage()">Next</button>
     </div>
   </div>
   
-  <!-- Side Widget (added without altering the main code) -->
+  <!-- Side Widget -->
   <div id="side-widget">
     <p class="title">Need translation?</p>
     <button id="select-text">Select Text</button>
@@ -157,15 +199,17 @@
   </div>
   
   <script>
-    // Main Code Scripts (unchanged)
+    // Main Code Scripts
     let currentPage = 1;
-    const totalPages = 2;
+    const totalPages = 3;
     
     function showPage(pageNum) {
       for (let i = 1; i <= totalPages; i++) {
         document.getElementById('page' + i).classList.remove('active');
       }
+
       document.getElementById('page' + pageNum).classList.add('active');
+
       document.getElementById("prev-btn").style.display = pageNum === 1 ? "none" : "inline-block";
       document.getElementById("next-btn").style.display = pageNum === totalPages ? "none" : "inline-block";
     }
@@ -188,7 +232,7 @@
       showPage(currentPage);
     });
     
-    // Side Widget Script (modified to capture the main container)
+    // Side Widget Script
     document.getElementById('select-text').addEventListener('click', function() {
       // Create overlay for user selection
       const overlay = document.createElement('div');
@@ -216,6 +260,7 @@
           const rectTop = Math.min(startY, currentY);
           const rectWidth = Math.abs(currentX - startX);
           const rectHeight = Math.abs(currentY - startY);
+
           selectionBox.style.left = rectLeft + 'px';
           selectionBox.style.top = rectTop + 'px';
           selectionBox.style.width = rectWidth + 'px';
@@ -229,13 +274,10 @@
           const boxRect = selectionBox.getBoundingClientRect();
           document.body.removeChild(overlay);
           
-          // Capture the main container (#container) instead of a duplicate content block
           const target = document.getElementById('container');
           const targetRect = target.getBoundingClientRect();
           
-          // Use html2canvas to capture the target element
           html2canvas(target, { useCORS: true, allowTaint: false }).then(canvas => {
-            // Calculate scale factor for accurate cropping
             const scaleFactor = canvas.width / targetRect.width;
             const sx = (boxRect.left - targetRect.left) * scaleFactor;
             const sy = (boxRect.top - targetRect.top) * scaleFactor;
@@ -245,10 +287,10 @@
             const croppedCanvas = document.createElement('canvas');
             croppedCanvas.width = sWidth;
             croppedCanvas.height = sHeight;
+
             const ctx = croppedCanvas.getContext('2d');
             ctx.drawImage(canvas, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
             
-            // Copy the cropped image to the clipboard
             croppedCanvas.toBlob(blob => {
               if (blob) {
                 const item = new ClipboardItem({ 'image/png': blob });
@@ -270,4 +312,3 @@
   </script>
 </body>
 </html>
-
